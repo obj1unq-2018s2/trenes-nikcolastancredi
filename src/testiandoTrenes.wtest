@@ -1,0 +1,108 @@
+import trenes.*
+import vagones.*
+import locomotoras.*
+
+
+
+describe "Formaciones"{
+	const alfa1 = new Locomotora(
+		peso = 2,
+		//pesoArrastre = 100000,
+		pesoArrastre = 1000,
+		velocidadMaxima = 80
+	)
+	
+	const alfa2 = new Locomotora(
+		peso = 1,
+		//pesoArrastre = 300000,
+		pesoArrastre = 3000,
+		velocidadMaxima = 60
+	)
+	
+	const vagonP1 = new VagonPasajeros(
+		largo = 50,
+		anchoUtil = 20		
+	)
+	
+	const vagonP2 = new VagonPasajeros(
+		largo = 5,
+		anchoUtil = 2
+	)
+	
+	const vagonC1 = new VagonCarga(
+		cargaMaxima = 20000
+	)
+
+	const vagonC2 = new VagonCarga(
+		cargaMaxima = 100
+	)
+	
+	const rocaFC = new Formacion(
+		vagones = [vagonP1,vagonP2,vagonC1,vagonC2],
+		locomotoras = [alfa1,alfa2]		
+	)
+	
+	const alfa3 = new Locomotora(
+		peso = 80,
+		pesoArrastre = 10000,
+		velocidadMaxima = 100
+	)
+	
+	const depositoChacabuco = new Deposito(
+		formacionesDepositadas = [new Formacion (locomotoras= [alfa3], 
+			vagones = [vagonC1,vagonC2,vagonP1] ) ]
+			
+	)
+	
+	test "Modelado de  RocaFC"{
+		assert.equals(4, rocaFC.vagones().size())
+		assert.equals(2,rocaFC.locomotoras().size())
+	}
+	
+	test "Vagones y su pesoMaximo"{
+		assert.equals(40000,vagonP1.pesoMaximo())
+		assert.equals(3200,vagonP2.pesoMaximo())
+		assert.equals(20160,vagonC1.pesoMaximo())
+		assert.equals(260,vagonC2.pesoMaximo())
+		
+	}
+
+	test "Locomotoras arrastre util"{
+		assert.equals(99998,alfa1.arrastreUtil())
+		assert.equals(299999,alfa2.arrastreUtil())
+	}
+	
+	// Test Punto 1
+	test "Vagones livianos "{
+		assert.equals(1,rocaFC.cantidadVagonesLivianos())
+	}
+	// Test Punto 2
+	test "Velocidad Maxima RocaFC"{
+		assert.equals(60,rocaFC.velocidadMaxima())
+	}
+	//Test Punto 3
+	test "RocaFC es eficiente"{
+		assert.that(rocaFC.esEficiente())
+	}
+	// Test Punto 4
+	test "RocaFC puede moverse"{
+		assert.that(rocaFC.puedeMoverse()) // arrastre util de locomotoras = 3997
+		// pesoMaximo total  = 63620
+	}
+	// Test Punto 5
+	test "Cuantos kilos le falta para moverse"{
+		assert.equals(0,rocaFC.cuantosParaMoverse())
+		assert.equals(59623,rocaFC.cuantosParaMoverse())
+	}
+	
+	// Test Punto 6
+	test "Los vagones mas Pesados de las formaciones"{
+		assert.equals([vagonP1],depositoChacabuco.losVagonesMasPesados())
+	}
+	
+	// Test Punto 7 
+	test "Deposito Chacabuco  necesita un conductor experto"{
+		assert.that(depositoChacabuco.necesitaUnConductorExp())
+	}
+	
+}
