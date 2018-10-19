@@ -29,6 +29,18 @@ describe "Formaciones"{
 		anchoUtil = 2
 	)
 	
+	const vagonP3 = new VagonPasajeros (
+		largo = 10,
+		anchoUtil = 4,
+		banios = 2
+	)
+	
+	const vagonP4 = new VagonPasajeros(
+		largo = 1,
+		anchoUtil = 1,
+		banios = 0
+	)
+	
 	const vagonC1 = new VagonCarga(
 		cargaMaxima = 20000
 	)
@@ -44,7 +56,7 @@ describe "Formaciones"{
 	
 	const alfa3 = new Locomotora(
 		peso = 80,
-		pesoArrastre = 10000,
+		pesoArrastre = 100000,
 		velocidadMaxima = 100
 	)
 	
@@ -53,6 +65,36 @@ describe "Formaciones"{
 			vagones = [vagonC1,vagonC2,vagonP1] ) ]
 			
 	)
+	
+	const deposito2 = new Deposito(
+		formacionesDepositadas = [new Formacion (locomotoras= [alfa1], 
+			vagones = [vagonC1,vagonC2,vagonP3] ),
+								 new Formacion(locomotoras = [alfa2], vagones = [vagonC1,vagonP1]) ]
+			
+	)
+	
+	const form1 = new FormacionDeCortaDistancia(
+		vagones = [vagonC2,vagonP1],
+		locomotoras = [alfa3]
+	)
+	
+	const form2 = new FormacionDeLargaDistancia(
+		vagones = [vagonC2,vagonP3],
+		locomotoras = [alfa3]
+	)
+	
+	const elPiola = new FormacionDeAltaVelocidad(
+		vagones = [vagonP4],
+		locomotoras = [alfa1]
+		
+	)
+	
+	const form3 = new FormacionDeLargaDistanciaCiudadesGrandes(
+		vagones =[vagonP1],
+		locomotoras = [alfa1]
+	)
+	
+	//---------------------------------------------------------------- Inicializacion Objetos---------------------------------
 	
 	test "Modelado de  RocaFC"{
 		assert.equals(4, rocaFC.vagones().size())
@@ -68,8 +110,8 @@ describe "Formaciones"{
 	}
 
 	test "Locomotoras arrastre util"{
-		assert.equals(99998,alfa1.arrastreUtil())
-		assert.equals(299999,alfa2.arrastreUtil())
+		assert.equals(998,alfa1.arrastreUtil())
+		assert.equals(2999,alfa2.arrastreUtil())
 	}
 	
 	// Test Punto 1
@@ -86,12 +128,12 @@ describe "Formaciones"{
 	}
 	// Test Punto 4
 	test "RocaFC puede moverse"{
-		assert.that(rocaFC.puedeMoverse()) // arrastre util de locomotoras = 3997
+		assert.that(not rocaFC.puedeMoverse()) // arrastre util de locomotoras = 3997
 		// pesoMaximo total  = 63620
 	}
 	// Test Punto 5
 	test "Cuantos kilos le falta para moverse"{
-		assert.equals(0,rocaFC.cuantosParaMoverse())
+		//assert.equals(0,rocaFC.cuantosParaMoverse())
 		assert.equals(59623,rocaFC.cuantosParaMoverse())
 	}
 	
@@ -105,4 +147,45 @@ describe "Formaciones"{
 		assert.that(depositoChacabuco.necesitaUnConductorExp())
 	}
 	
+	// Test Punto 8
+	test"Agregar Locomotoras"{
+		assert.that (  not form3.puedeMoverse())
+		deposito2.agregarLocomotoraA(form3)
+		
+		assert.equals([alfa1],form3.locomotoras())
+	}
+	
+	//Test Punto 9
+	test "Esta Bien Armada Corta Distancia"{
+		assert.that(form1.esCompleja())
+		assert.that (form1.puedeMoverse())
+		assert.that(form1.estaBienArmada())
+	} 
+	
+	test "Esta Bien Armada De Larga Distancia"{
+		assert.that( form2.puedeMoverse())
+		assert.equals(100,vagonP3.cantidadPasajeros())
+		assert.equals(0,vagonC1.cantidadPasajeros())
+		assert.that(form2.tieneMuchosBanios())
+		assert.that(form2.estaBienArmada())
+		
+	}
+	
+	// Test Punto 10 
+	test "Velocidad Maxima de las formaciones de corta distancia"{
+		assert.equals(60,form1.velocidadMaxima())
+	}
+	test "Velocidad Maxima de las formaciones de larga distancia"{
+		assert.equals(100,form2.velocidadMaxima())
+	}
+	test "Velocidad  Maxima de las formaciones de LargaDistancia Grandes Ciudades"{
+		assert.equals(80,form3.velocidadMaxima())
+	}
+	
+	// Test Punto 11
+	test "Trenes de Alta Velocidad"{
+		assert.equals(640,vagonP4.pesoMaximo())
+		assert.that(elPiola.todosVagonesLivianos())
+		assert.that(not elPiola.estaBienArmada())
+	}
 }
