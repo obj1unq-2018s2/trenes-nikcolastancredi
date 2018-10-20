@@ -80,18 +80,21 @@ describe "Formaciones"{
 	
 	const form2 = new FormacionDeLargaDistancia(
 		vagones = [vagonC2,vagonP3],
-		locomotoras = [alfa3]
+		locomotoras = [alfa3],
+		cubreGrandesCiudades = true
 	)
 	
 	const elPiola = new FormacionDeAltaVelocidad(
 		vagones = [vagonP4],
-		locomotoras = [alfa1]
+		locomotoras = [alfa1],
+		cubreGrandesCiudades = true
 		
 	)
 	
-	const form3 = new FormacionDeLargaDistanciaCiudadesGrandes(
+	const form3 = new FormacionDeLargaDistancia(
 		vagones =[vagonP1],
-		locomotoras = [alfa1]
+		locomotoras = [alfa1],
+		cubreGrandesCiudades = false
 	)
 	
 	//---------------------------------------------------------------- Inicializacion Objetos---------------------------------

@@ -49,21 +49,14 @@ class Formacion {
 
 
 class FormacionDeLargaDistancia inherits Formacion{
+	var property  cubreGrandesCiudades = null
 	
 	override method estaBienArmada() = super() && self.tieneMuchosBanios()
 	
+	override method velocidadMaxima() = super().min(if(cubreGrandesCiudades) 200 else 150 ) 	
 	
  }
  
-
-class FormacionDeLargaDistanciaCiudadesGrandes inherits FormacionDeLargaDistancia{
-	override method velocidadMaxima() = super().min(200)
-}
-
-class FormacionDeLargaDistanciaCiudadesPequenas inherits FormacionDeLargaDistancia{
-	override method velocidadMaxima() = super().min(150)
-}
-
 class FormacionDeCortaDistancia inherits Formacion {
 	override method  estaBienArmada() = super() && self.esCompleja()
 	
